@@ -1,0 +1,198 @@
+<h3>Development Tools</h3>
+
+<p>We use Composer to manage PHP components and Bower for JS components. With the help of Grunt all front-end components are compiled and minified into <strong>vendor.js</strong> and <strong>vendor.css</strong>.</p>
+
+<p>A number of scripts is written:</p>
+
+<ul>
+    <li>
+
+<h4>scripts/install-dependencies</h4>
+
+<p>This script will install <em>development</em> or <em>production</em> environment dependencies.<p>
+
+    </li><li>
+
+<h4>scripts/build-front</h4>
+
+<p>This will concatenate and minify all the 3rd-party JS and CSS into <strong>js/vendor.min.js</strong> and <strong>css/vendor.min.css</strong>.</p>
+
+    </li><li>
+
+<h4>scripts/dev-server</h4>
+
+<p>This will launch PHP-builtin web-server on port 8000. Do not use in production!</p>
+
+    </li><li>
+
+<h4>scripts/test-backend</h4>
+
+<p>Run unit tests for PHP code</p>
+
+    </li>
+</ul>
+
+<h3>Development environment</h3>
+
+<h4>Installation</h4>
+
+<ol>
+    <li>
+
+<p>You can create a repo for your project like this:</p>
+
+<p>First create an empty repository on github (your-login/my-project) and then:</p>
+
+<snippet class="bash">&gt; mkdir MyProject
+&gt; cd MyProject
+&gt; git init
+&gt; git remote add skeleton https://github.com/basarevych/zf2-skeleton.git
+&gt; git pull skeleton master
+&gt; git remote add origin https://github.com/your-login/my-project.git
+&gt; git push -u origin master
+</snippet>
+
+    </li><li>
+
+<p>Install dependencies in <em>development</em> mode</p>
+
+<snippet class="bash">&gt; cd MyProject
+&gt; ./scripts/install-dependencies dev
+&gt; ./scripts/build-front
+</snippet>
+
+<p>In <em>development</em> mode the first script will run composer to install <em>new</em> versions of backend components and write each component version in <strong>composer.lock</strong>. So in <em>production</em> mode it will read that file and install exactly these (tested by you) versions, not the newest ones.</p>
+
+<p>In <em>dev</em> mode the script will also install latest <strong>node</strong> and <strong>bower</strong> components, so you need node.js and npm on the development server.</p>
+
+<p>The second script will compile all the <strong>bower</strong> modules into <strong>vendor.min.js/css</strong> which you should include in your ZF template.</p>
+
+    </li><li>
+
+<p>Create local (ignored by git) config files</p>
+
+<p>Read the README in <strong>config/autoload/</strong> if you don't know the difference between local/global config files.</p>
+
+<snippet class="bash">&gt; cd MyProject/config/autoload
+&gt; cp local.php.dist local.php
+&gt; cp memcached.local.php.dist memcached.local.php
+</snippet>
+
+<p><strong>NOTE</strong>: If you don't use Memcached simply do not create memcached.local.php. No cache will be used.</p>
+
+<p>Now edit the newly created files, choose your DB driver, credentials, set other parameters.</p>
+
+    </li><li>
+
+<p>Create and populate the database</p>
+
+<p>Database schemas are in <strong>database/</strong> directory. Consult README there for specific commands on creating the database.</p>
+
+    </li><li>
+
+<p>Run development server (do not use in production)</p>
+
+<snippet class="bash">&gt; cd MyProject
+&gt; ./scripts/dev-server
+</snippet>
+
+<p>This will run PHP web server on port 8000 of localhost.</p>
+
+    </li>
+</ol>
+
+<h4>Adding new front-end dependency</h4>
+
+<ol>
+    <li>
+
+<p>Add the appropriate line to "require" section of <strong>bower.json</strong>.</p>
+
+    </li><li>
+
+<p>Run <strong>scripts/install-dependecies</strong> in <em>dev</em> mode.</p>
+
+    </li><li>
+
+<p>Now find .js and .css files of the dependency in <strong>bower_components</strong> and add them to <strong>Gruntfile.js</strong>.</p>
+
+    </li><li>
+
+<p>Run <strong>scripts/build-front</strong> script to create new <strong>vendor.js</strong> and <strong>vendor.css</strong> files.</p>
+
+    </li><li>
+
+<p>Keep vendor.js/.css files under git control so you will have them ready to use in production (you need to compile them in development environment only).</p>
+
+    </li>
+</ol>
+
+<h3>Production environment</h3>
+
+<h4>Installation</h4>
+
+<ol>
+    <li>
+
+<p>Create project directory:</p>
+
+<snippet class="bash">&gt; git clone https://github.com/your-login/my-project.git MyProject
+</snippet>
+
+    </li><li>
+
+<p>Install dependencies in <em>production</em> mode</p>
+
+<snippet class="bash">&gt; cd MyProject
+&gt; ./scripts/install-dependencies prod
+</snippet>
+
+<p>You need php only here, no node.js or npm on production server.</p>
+
+    </li><li>
+
+<p>Create local (ignored by git) config files</p>
+
+<p>Read the README in <strong>config/autoload/</strong> if you don't know the difference between local/global config files.</p>
+
+<snippet class="bash">&gt; cd MyProject/config/autoload
+&gt; cp local.php.dist local.php
+&gt; cp memcached.local.php.dist memcached.local.php
+</snippet>
+
+<p><strong>NOTE</strong>: If you don't use Memcached simply do not create memcached.local.php. No cache will be used.</p>
+
+<p>Now edit the newly created files, choose your DB driver, credentials, set other parameters.</p>
+
+    </li><li>
+
+<p>Create and populate the database</p>
+
+<p>Database schemas are in <strong>database/</strong> directory. Consult README there for specific commands on creating the database.</p>
+
+    </li><li>
+
+<p>Create production mode web server configs.</p>
+
+<snippet>&lt;VirtualHost *:80&gt;
+    ServerName my-project.example.com
+    DocumentRoot /path/to/MyProject/public
+    &lt;Directory /path/to/MyProject/public&gt;
+        DirectoryIndex index.php
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</snippet>
+
+    </li>
+</ol>
+
+<h4>Updating production server</h4>
+
+<p>In order to update the production server all you need is:</p>
+
+<snippet class="bash">&gt; cd MyProject
+&gt; git pull
+&gt; ./scripts/install-dependencies prod
+</snippet>

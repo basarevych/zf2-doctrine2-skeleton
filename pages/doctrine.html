@@ -1,0 +1,201 @@
+<h3>ZF2 & Doctrine</h3>
+
+<p>This is most widely used setup for ZF2 + Doctrine using doctrine/doctrine-orm-module.</p>
+
+<p>Entity manager is available as 'Doctrine\ORM\EntityManager' service.</p>
+
+<p>You start using Doctrine by setting up the driver and credentials in <strong>config/autoload/local.php</strong> configuration file.</p>
+
+<h3>Directories</h3>
+
+<ul>
+    <li>
+
+<h4>database/</h4>
+
+<p>This directory contains database schema</p>
+
+    </li><li>
+
+<h4>module/Application/src/Application/Entity</h4>
+
+<p>This directory is for Doctrine entities</p>
+
+    </li><li>
+
+<h4>module/Application/src/Application/Repository</h4>
+
+<p>And this one for Doctrine repositories</p>
+
+    </li><li>
+
+<h4>module/Application/src/Application/Doctrine</h4>
+
+<p>Our extensions to Doctrine directory</p>
+
+    </li>
+</ul>
+
+<p>Initial skeleton includes Sample entity and a repository for it. Delete it when you create your schema and entities.</p>
+
+<h3>Getting Started</h3>
+
+<p>I personally use <a href="http://doctrine-orm.readthedocs.org/en/latest/tutorials/getting-started-database.html">Database-first</a> approach when developing with Doctrine.</p>
+
+<p>This means that I handcraft database schema for a specific DB server first. Then create entities and repositories by hand also.</p>
+
+<h4>The steps when using Database-first approach</h4>
+
+<ol>
+    <li>
+
+<p>Edit <strong>database/mysql.schema.sql</strong> (we will be using MySQL)
+
+<snippet class="sql">DROP TABLE IF EXISTS `sample`;
+
+CREATE TABLE `sample` (
+    `id` int unsigned NOT NULL AUTO_INCREMENT,
+    `value_string` varchar(255) NULL,
+    `value_integer` int NULL,
+    `value_float` float NULL,
+    `value_boolean` tinyint(1) NULL,
+    `value_datetime` datetime NULL,
+    CONSTRAINT `sample_pk` PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+</snippet>
+
+    </li><li>
+
+<p>Create the actual database on server using this schema: See README in <strong>database/</strong> directory for DB server-specific console commands.</p>
+
+    </li><li>
+
+<p>Set this database driver and credentials in <strong>config/autoload/local.php</strong>.</p>
+
+    </li><li>
+
+<p>Create the entities</p>
+
+<snippet class="php">&lt;?php
+
+namespace Application\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Sample entity
+ * 
+ * @ORM\Entity(repositoryClass="Application\Repository\Sample")
+ * @ORM\Table(name="sample")
+ */
+class Sample
+{
+    /**
+     * Row ID
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * String value
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $value_string;
+
+    /**
+     * Integer value
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $value_integer;
+
+    /**
+     * Float value
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    protected $value_float;
+
+    /**
+     * Boolean value
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $value_boolean;
+
+    /**
+     * DateTime value
+     *
+     * @ORM\Column(type="utcdatetime", nullable=true)
+     */
+    protected $value_datetime;
+}
+</snippet>
+
+<p>As you can see we created all the table fields as protected properties</p>
+
+    </li><li>
+
+<p>Auto generate getters/setters for our fields</p>
+
+<snippet class="bash">&gt; php public/index.php orm:generate-entities module/Application/src
+&gt; rm module/Application/src/Application/Entity/*~
+</snippet>
+
+<p>This will make sure all the getters/setters are created for all the entities. See the actual file for the resulting entity.</p>
+
+    </li>
+</ol>
+
+<h3>Caching</h3>
+
+<p>When you enable <strong>memcached.local.php</strong> Doctrine cache is setup to use Memcached for all its internal stuff. It's up to you when to enable Doctrine <em>result</em> cache.</p>
+
+<p>Consider the following example:</p>
+
+<snippet class="php">&lt;?php
+
+namespace Application\Repository;
+
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
+
+class Sample extends EntityRepository
+{
+    public function findAllCached()
+    {
+        $qb = $this-&gt;_em-&gt;createQueryBuilder();
+        $qb-&gt;select('s')
+           -&gt;from('Application\Entity\Sample', 's');
+
+        $query = $qb-&gt;getQuery();
+        $query-&gt;useResultCache(true);  // <== This is it
+        $result = $query-&gt;getResult();
+
+        return $result;
+    }
+}
+</snippet>
+
+<p>You use it as any other repository method. In controller, for example:</p>
+
+<snippet class="php">$sl = $this-&gt;getServiceLocator();
+$em = $sl-&gt;get('Doctrine\ORM\EntityManager');
+
+$repo = $em-&gt;getRepository('Application\Entity\Sample');
+$all = $repo-&gt;findAllCached();
+</snippet>
+
+<p>No need to modify this code for enabled or disabled Memcached cases. If no cache is enabled this method will just work as non-cached version.</p>
+
+<h3>UTC DateTime</h3>
+
+<p>One of the problems with ORM is datetime field. Not all the DBs have means to store timezone with the datetime values. And your server (or even several servers) could be in any timezone possible.</p>
+
+<p>There is a simple solution for all the cases: a field that automatically converts datetime to UTC when writing to the DB and back to PHP server timezone when retrieving values.</p>
+
+<p><strong>module/Application/src/Application/Doctrine/UtcDateTime.php</strong> implements this solution. Everything is already included in the configs so you can just set field type to "utcdatetime" instead of "datetime" in order to use it.</p>

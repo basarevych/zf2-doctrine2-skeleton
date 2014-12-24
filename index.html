@@ -1,75 +1,66 @@
-<html>
+<html ng-app="App">
     <head>
         <title>ZF2 Skeleton</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="UTF-8">
+
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/default.css">
+
+        <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-route.js"></script>
+        <script src="js/highlight.pack.js"></script>
+        <script src="js/app.js"></script>
+        <script src="js/directives.js"></script>
+        <script src="js/controllers.js"></script>
+
+        <style>
+            h3, #sidebar {
+                margin-top: 60px;
+            }
+            .content {
+                margin-bottom: 60px;
+            }
+            #sidebar.affix-bottom {
+                position: static !important;
+            }
+            @media(max-width: 991px) {
+                #sidebar {
+                    position: static !important;
+                }
+            }
+            @media(min-width: 992px) {
+                #sidebar {
+                    width: 183px;
+                }
+            }
+            @media(min-width: 1200px) {
+                #sidebar {
+                    width: 231px;
+                }
+            }
+        </style>
     </head>
     <body>
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <div data-spy="affix" data-offset-top="60" data-offset-bottom="0">
-                        <a href="tools.html"> Tools used: Composer/Bower/Grunt</a>
-                        <a href="workflow.html">Installation / Suggested workflow</a>
-                        <a href="doctrine.html">Doctrine integration</a>
-                        <a href="memcached.html">Memcached integration</a>
-                        <a href="console.html">Sample console controller</a>
-                        <a href="translator.html">Translator preconfigured</a>
-                        <a href="mail.html">Mail service</a>
-                        <a href="error-strategy.html">Custom Error Strategy</a>
-                        <a href="session.html">Session</a>
+                <div class="col-md-3">
+                    <div id="sidebar" class="list-group" data-spy="affix" data-offset-top="50" data-offset-bottom="50">
+                        <a href="#/page/workflow" class="list-group-item" ng-class="{ active: page == 'workflow' }">Installation / Suggested&nbsp;workflow</a>
+                        <a href="#/page/doctrine" class="list-group-item" ng-class="{ active: page == 'doctrine' }">Doctrine integration</a>
+                        <a href="#/page/memcached" class="list-group-item" ng-class="{ active: page == 'memcached' }">Memcached integration</a>
+                        <a href="#/page/console" class="list-group-item" ng-class="{ active: page == 'console' }">Sample console controller</a>
+                        <a href="#/page/translator" class="list-group-item" ng-class="{ active: page == 'translator' }">Translator preconfigured</a>
+                        <a href="#/page/mail" class="list-group-item" ng-class="{ active: page == 'mail' }">Mail service</a>
+                        <a href="#/page/error-strategy" class="list-group-item" ng-class="{ active: page == 'error-strategy' }">Custom Error Strategy</a>
+                        <a href="#/page/session" class="list-group-item" ng-class="{ active: page == 'session' }">Session</a>
                     </div>
                 </div>
-                <div class="col-md-8">
-                    <h1>ZF2 Skeleton</h1>
-
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
-                    <p>Yet another Zend Framework 2 Skeleton Application and a little tutorial (see the docs below).</p>
+                <div class="col-md-9 content">
+                    <div ng-view></div>
                 </div>
             </div>
         </div>

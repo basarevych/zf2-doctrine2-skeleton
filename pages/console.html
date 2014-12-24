@@ -1,0 +1,92 @@
+<h3>ZF2 Console Controller</h3>
+
+<p>Single console controller is included with this skeleton: <strong>module/Application/src/Application/Controller/ConsoleController.php</strong></p>
+
+<p>Run php with no arguments to see usage information:</p>
+
+<snippet class="bash">&gt; php public/index.php
+</snippet>
+
+<p>Controller has the following commands initially:</p>
+
+<ul>
+    <li>
+
+<h4>Cron</h4>
+
+<p>Many if not all the projects have a need to periodically run a script. You can add this to your root's crontab:</p>
+
+<snippet>*/3 * * * * sudo -u www php /home/project.root/public/index.php cron
+</snippet>
+
+<p>"sudo -u www" will run this command as user <em>www</em> (replace the name if needed). You might also want to add the following line to <strong>sudoers</strong> to stop sudo from spamming the logs about each script invocation.</p>
+
+<snippet>Defaults syslog_goodpri=debug
+</snippet>
+
+    </li><li>
+
+<h4>populate-db</h4>
+
+<p>This command is for filling the empty (just created) database with initial data. Included version has code for creating some number of Sample entities - replace it with your version.</p>
+
+<snippet class="bash">&gt; php public/index.php populate-db
+</snippet>
+
+    </li>
+</ul>
+
+<h3>Adding a command</h3>
+
+<p>In order to add a command do the following:</p>
+
+<ol>
+    <li>
+
+<p>Add to module's <strong>module.config.php</strong> to 'console/router/routes' section:</p>
+
+<snippet class="php">'my-command' =&gt; [
+    'options' =&gt; [
+        'route'    =&gt; 'my-command [-v] &lt;param1&gt; [&lt;param2&gt;]',
+        'defaults' =&gt; [
+            'controller' =&gt; 'Application\Controller\Console',
+            'action'     =&gt; 'my-command'
+        ]
+    ]
+],
+</snippet>
+
+<p>This command accepts optinal <strong>-v</strong> option and param1 and param2 arguments. param2 is also optional.</p>
+
+    </li><li>
+
+<p>Add to the controller:</p>
+
+<snippet class="php">public function myCommandAction()
+{
+    $request  = $this-&gt;getRequest();
+    $verbose  = $request-&gt;getParam('v');
+    $param1   = $request-&gt;getParam('param1');
+    $param2   = $request-&gt;getParam('param2');
+}
+</snippet>
+
+    </li><li>
+
+<p>Add command usage information to <strong>module/Application/Module::getConsoleUsage()</strong>:</p>
+
+<snippet class="php">return [
+    'my-command [-v] &lt;param1&gt; [&lt;param2&gt;]' =&gt; '',
+    [ PHP_EOL,      'The long command description goes here' ],
+    [ '-v',         'Enable verbose mode' ],
+    [ '&lt;param1&gt;',   'Parameter #1 description' ],
+    [ '&lt;param2&gt;',   'Parameter #2 description' ],
+];
+</snippet>
+
+    </li><li>
+
+<p>Run it like this:</p>
+
+<snippet class="bash">&gt; php public/index.php my-command -v foo bar
+</snippet>

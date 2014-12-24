@@ -1,0 +1,67 @@
+<h3>ZF2 Translator</h3>
+
+<h4>Configuration</h4>
+
+<p>Translator configuration belong to module's config (<strong>module/ModuleName/config/module.config.php</strong>).</p>
+
+<p>Standard Translator configuration parameters are used with the addition of the following two keys:</p>
+
+<ul>
+    <li>
+
+<p>'locales' - array of locales this module provides (it cannot be autodetected so set it by hand)</p>
+
+    </li><li>
+
+<p>'default' - the default (fallback) locale</p>
+
+    </li>
+</ul>
+
+<h3>Configuration Example</h3>
+
+<p>Consider the following example:</p>
+
+<snippet class="php">'translator' =&gt; [
+    'locales' =&gt; [ 'en', 'fr', 'ru' ],
+    'default' =&gt; 'en',
+    'translation_file_patterns' =&gt; [
+        [
+            'type'     =&gt; 'phpArray',
+            'base_dir' =&gt; __DIR__ . '/../l10n',
+            'pattern'  =&gt; '%s.php',
+        ],
+    ],
+],
+</snippet>
+
+<p>In this example module provides translation into 'en', 'fr' and 'ru' locales using phpArray adapter. Files are in <strong>module/ModuleName/l10n</strong> directory (en.php, fr.php and ru.php).</p>
+
+<h3>Usage</h3>
+
+<p><strong>NOTE</strong>: The framework (all the validator messages) uses English text as parameter to $translate. If no translation found the parameter is printed as is.</p>
+
+<p>In your view script:</p>
+
+<snippet class="html">&lt;h1&gt;&lt;?= $this-&gt;translate('English text') ?&gt;&lt;/h1&gt;
+</snippet>
+
+<p>If you need to use translator in your controller:</p>
+
+<snippet class="php">$sl = $this-&gt;getServiceLocator();
+$translate = $sl-&gt;get('viewhelpermanager')-&gt;get('translate');
+
+$result = $translate('English text');
+</snippet>
+
+<h3>Locale autodetection</h3>
+
+<p><strong>Application\Module::onBootstrap</strong> has code for choosing best locale based on HTTP Accept-Language header.</p>
+
+<p>You don't have to copy this code to your other module's <strong>onBootstrap</strong> since <strong>Application</strong> module is always bootstrapped even when running another module.</p>
+
+<h3>Caching</h3>
+
+<p>If you enabled our <strong>memcached.local.php</strong> then the translator is set up using Memcached as cache.</p>
+
+<p>When you modify a translation you might also want to restart Memcached daemon to clear the cache and see the changes immediately.</p>

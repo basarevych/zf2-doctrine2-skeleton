@@ -1,0 +1,36 @@
+<h3>ZF2 & Memcached</h3>
+
+<h4>Configuration</h4>
+
+<snippet class="php">&gt; cd config/autoload
+&gt; cp memcached.local.php.dist memcached.local.php
+</snippet>
+
+<p>The file <strong>memcached.local.php</strong> is quite complex config but really there are no user-serviceble parts inside, except for 'namespace' and 'ttl' in 'caches/memcached/adapter'.</p>
+
+<p>Features pre-configured:</p>
+
+<ul>
+    <li>Doctrine cache</li>
+    <li>Translator cache</li>
+</ul>
+
+<p>Integration is seamless, so no need change anything in Doctrine or Translator when enabling/disabling the cache.</p>
+
+<h3>The service</h3>
+
+<p>You can use Memcached by hand:</p>
+
+<snippet class="php">$sl = $this-&gt;getServiceLocator();
+$cache = $sl-&gt;has('Memcached') ? $sl-&gt;get('Memcached') : null;
+
+if ($cache &amp;&amp; $cache-&gt;hasItem('test')) {
+    $test = $cache-&gt;getItem('test');
+} else {
+    $test = 'value';
+    if ($cache)
+        $cache-&gt;setItem('test', $test);
+}
+
+var_dump($test);
+</snippet>

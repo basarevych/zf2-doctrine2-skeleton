@@ -1,0 +1,36 @@
+<h3>ZF2 Session</h3>
+
+<p>This is a simple service for sessions support.</p>
+
+<h4>Configuration</h4>
+
+<p><strong>local.php</strong>:</p>
+<snippet class="php">'session' =&gt; [
+    'name'                =&gt; 'zf2skeleton',
+    'save_handler'        =&gt; 'files', // 'files' or 'memcached'
+    'save_path'           =&gt; realpath(__DIR__ . '/../../data/session'),
+    'remember_me_seconds' =&gt; 7 * 24 * 60 * 60,
+    'cookie_lifetime'     =&gt; 7 * 24 * 60 * 60,
+],
+</snippet>
+
+<p>Initialize your session in Application module onBootstrap:</p>
+
+<snippet class="php">$serviceManager = $e-&gt;getApplication()-&gt;getServiceManager();
+$session        = $serviceManager-&gt;get('Session');
+$session-&gt;start();
+</snippet>
+
+<h3>Usage</h3>
+
+<snippet class="php">$sl = $this-&gt;getServiceLocator();
+$session = $sl-&gt;get('Session');
+$cont = $session-&gt;getContainer();
+if ($cont-&gt;offsetExists('foo')) {
+    echo "getting";
+    var_dump($cont-&gt;foo);
+} else {
+    echo "setting";
+    $cont-&gt;foo = 'bar';
+}
+</snippet>

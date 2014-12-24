@@ -1,0 +1,41 @@
+<h3>ZF2 Mail Service</h3>
+
+<p>This is really simple service for sending mail using ZF2.</p>
+
+<h4>Configuration</h4>
+
+<p>You should have this in your <strong>config/autoload/local.php</strong>:</p>
+
+<snippet class="php">'mail' =&gt; [
+    'transport' =&gt; 'sendmail'
+],
+</snippet>
+
+<p>Or:</p>
+
+<snippet class="php">'mail' =&gt; [
+    'transport' =&gt; 'smtp',
+    'host'      =&gt; '127.0.0.1',
+    'port'      =&gt; 25
+],
+</snippet>
+
+<p><strong>sendmail</strong> transport uses PHP functions to send email, <strong>smtp</strong> transport talks directly to mail server.</p>
+
+<h3>Sending mail example</h3>
+
+<p>In order to send HTML Unicode mail from your controller:</p>
+
+<snippet class="php">$mail = $this-&gt;getServiceLocator()-&gt;get('Mail');
+
+$html = "<h3>Test HTML / Юникод</h3>";
+
+$msg = $mail-&gt;createHtmlMessage($html);
+$msg-&gt;setFrom("root@example.com", "Charlie Root");
+$msg-&gt;setTo("person@gmail.com", "Some Person");
+$msg-&gt;setSubject("the subject / юникод");
+
+$mail-&gt;getTransport()-&gt;send($msg);
+</snippet>
+
+<p><strong>NOTE</strong>: Your mail server might impose restrictions or not even accept mail for some From: header values. Use the real one.</p>
