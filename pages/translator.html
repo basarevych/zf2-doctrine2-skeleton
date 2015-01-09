@@ -23,8 +23,8 @@
 <p>Consider the following example:</p>
 
 <snippet class="php">'translator' =&gt; [
-    'locales' =&gt; [ 'en', 'fr', 'ru' ],
-    'default' =&gt; 'en',
+    'locales' =&gt; [ 'en_US', 'fr_FR', 'ru_RU' ],
+    'default' =&gt; 'en_US',
     'translation_file_patterns' =&gt; [
         [
             'type'     =&gt; 'phpArray',
@@ -35,7 +35,9 @@
 ],
 </snippet>
 
-<p>In this example module provides translation into 'en', 'fr' and 'ru' locales using phpArray adapter. Files are in <strong>module/ModuleName/l10n</strong> directory (en.php, fr.php and ru.php).</p>
+<p>In this example module provides translation into 'en_US', 'fr_FR' and 'ru_RU' locales using phpArray adapter. Files are in <strong>module/ModuleName/l10n</strong> directory (en_US.php, fr_FR.php and ru_RU.php).</p>
+
+<p><strong>NOTE</strong>: You can name your locales using short names, i.e. 'en' instead of 'en_US', and this might work. But not on all platforms. So use full names like 'en_US' if you want a portable application.</p>
 
 <h3>Usage</h3>
 
