@@ -1,8 +1,18 @@
-<h3>Development Tools</h3>
+<h3>Directory layout</h3>
 
-<p>We use Composer to manage PHP components and Bower for JS components. With the help of Grunt all front-end components are compiled and minified into <strong>vendor.js</strong> and <strong>vendor.css</strong>.</p>
+<p>We use Composer to manage PHP components and Bower/Grunt for JS components. Root-level files and directoris are all about backend with the exception of <strong>front</strong> subdirectory - place for your frontend sources.</p>
 
-<p>A number of scripts is written:</p>
+<p>Put your frontend JS files in <strong>front/js</strong>, CSS in <strong>front/css</strong> and assets like images in <strong>front/assets/[common|override.dev|override.front]</strong> directories.</p>
+
+<p>With the help of Grunt all front-end dependencies are compiled and minified into <strong>js/vendor[.min].js</strong> and <strong>css/vendor[.min].css</strong>.</p>
+
+<p>Your project JS and CSS files are compiled into <strong>js/app[.min].js</strong> and <strong>css/app[.min].css</strong> files also.</p>
+
+<p>Minified versions of these files are placed in <strong>public.prod</strong> (<em>production</em> environment) directory. Non-min versions are placed in <strong>public.dev</strong> (<em>development</em> environment).</p>
+
+<p>Assets are also copied into these two public directories.</p>
+
+<h3>A number of scripts is written:</h3>
 
 <ul>
     <li>
@@ -15,13 +25,15 @@
 
 <h4>scripts/build-front</h4>
 
-<p>This will concatenate and minify all the 3rd-party JS and CSS into <strong>js/vendor.min.js</strong> and <strong>css/vendor.min.css</strong>.</p>
+<p>This will copy assets, concatenate and minify all your and 3rd-party JS and CSS into <strong>js/vendor[.min].js</strong>, <strong>css/vendor[.min].css</strong>, <strong>js/app[.min].js</strong> and <strong>css/app[.min].css</strong> files in either <em>production</em> or <em>development</em> versions of the public directory.</p>
 
     </li><li>
 
 <h4>scripts/dev-server</h4>
 
 <p>This will launch PHP-builtin web-server on port 8000. Do not use in production!</p>
+
+<p>With --watch flag this script will use Grunt to watch for changes of frontend files and rebuild <strong>public.dev</strong> for any change detected.</p>
 
     </li><li>
 
@@ -64,14 +76,14 @@
 
 <snippet class="bash">&gt; cd MyProject
 &gt; ./scripts/install-dependencies dev
-&gt; ./scripts/build-front
+&gt; ./scripts/build-front dev
 </snippet>
 
 <p>In <em>development</em> mode the first script will run composer to install <em>new</em> versions of backend components and write each component version in <strong>composer.lock</strong>. So in <em>production</em> mode it will read that file and install exactly these (tested by you) versions, not the newest ones.</p>
 
 <p>In <em>dev</em> mode the script will also install latest <strong>node</strong> and <strong>bower</strong> components, so you need node.js and npm on the development server.</p>
 
-<p>The second script will compile all the <strong>bower</strong> modules into <strong>vendor.min.js/css</strong> which you should include in your ZF template.</p>
+<p>The second script will compile all the <strong>bower</strong> modules into <strong>vendor.js/css</strong> and your frontend files into <strong>app.js/css</strong>.</p>
 
     </li><li>
 
@@ -107,7 +119,7 @@
 <p>Run development server (do not use in production)</p>
 
 <snippet class="bash">&gt; cd MyProject
-&gt; ./scripts/dev-server
+&gt; ./scripts/dev-server --watch
 </snippet>
 
 <p>This will run PHP web server on port 8000 of localhost.</p>
@@ -132,14 +144,16 @@
 
     </li><li>
 
-<p>Run <strong>scripts/build-front</strong> script to create new <strong>vendor.js</strong> and <strong>vendor.css</strong> files.</p>
-
-    </li><li>
-
-<p>Keep vendor.js/.css files under git control so you will have them ready to use in production (you need to compile them in development environment only).</p>
+<p>Run <strong>scripts/build-front dev</strong> script to create new <strong>vendor.js</strong> and <strong>vendor.css</strong> files in <strong>public.dev</strong>.</p>
 
     </li>
 </ol>
+
+<h4>Saving compiled frontend files</h4>
+
+<p>When you are done testing <strong>public.dev</strong> (which is ignored by git) simply run <strong>build-front prod</strong> script. It will created <strong>public.prod</strong> directory which you should commit into the repo.
+
+<p>This way when you checkout the repo on production server you will have all the frontend files ready to be used, just point your web-server to <strong>public.prod</strong> and install PHP prod-dependencies.</p>
 
 <h3>Production environment</h3>
 
@@ -190,8 +204,8 @@
 
 <snippet>&lt;VirtualHost *:80&gt;
     ServerName my-project.example.com
-    DocumentRoot /path/to/MyProject/public
-    &lt;Directory /path/to/MyProject/public&gt;
+    DocumentRoot /path/to/MyProject/public.prod
+    &lt;Directory /path/to/MyProject/public.prod&gt;
         DirectoryIndex index.php
         AllowOverride All
         Require all granted
