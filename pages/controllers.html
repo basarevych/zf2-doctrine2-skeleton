@@ -10,7 +10,7 @@
 
 <p>Run php with no arguments to see usage information:</p>
 
-<snippet class="bash">&gt; php public/index.php
+<snippet class="bash">&gt; php public.prod/index.php
 </snippet>
 
 <p>Controller has the following commands initially:</p>
@@ -22,7 +22,7 @@
 
 <p>Many if not all the projects have a need to periodically run a script. You can add this to your root's crontab:</p>
 
-<snippet>*/3 * * * * sudo -u www php /home/project.root/public/index.php cron
+<snippet>*/3 * * * * sudo -u www php /home/project.root/public.prod/index.php cron
 </snippet>
 
 <p>"sudo -u www" will run this command as user <em>www</em> (replace the name if needed). You might also want to add the following line to <strong>sudoers</strong> to stop sudo from spamming the logs about each script invocation.</p>
@@ -36,7 +36,7 @@
 
 <p>This command is for filling the empty (just created) database with initial data. Included version has code for creating some number of Sample entities - replace it with your version.</p>
 
-<snippet class="bash">&gt; php public/index.php populate-db
+<snippet class="bash">&gt; php public.prod/index.php populate-db
 </snippet>
 
     </li>
@@ -94,5 +94,5 @@
 
 <p>Run it like this:</p>
 
-<snippet class="bash">&gt; php public/index.php my-command -v foo bar
+<snippet class="bash">&gt; php public.prod/index.php my-command -v foo bar
 </snippet>

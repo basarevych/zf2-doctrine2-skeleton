@@ -1,0 +1,65 @@
+<h3>Directory layout</h3>
+
+<p>We use Composer to manage PHP components and Bower/Grunt for JS components. Root-level files and directoris are all about backend with the exception of <strong>front</strong> subdirectory - place for your frontend sources.</p>
+
+<p>Put your frontend JS files in <strong>front/js</strong>, CSS in <strong>front/css</strong> and assets like images in <strong>front/assets/[common|override.dev|override.front]</strong> directories.</p>
+
+<p>With the help of Grunt all front-end dependencies are compiled and minified into <strong>js/vendor[.min].js</strong> and <strong>css/vendor[.min].css</strong>.</p>
+
+<p>Your project JS and CSS files are compiled into <strong>js/app[.min].js</strong> and <strong>css/app[.min].css</strong> files also.</p>
+
+<p>Minified versions of these files are placed in <strong>public.prod</strong> (<em>production</em> environment) directory. Non-min versions are placed in <strong>public.dev</strong> (<em>development</em> environment). Assets are also copied into these two public directories.</p>
+
+<p>Point your web server document root to one of these directories.</p>
+
+<p><strong>NOTE</strong>: <strong>public.dev</strong> is completely ignored by git - you build and use it locally on the development machine, <strong>public.prod</strong> is under git control, you build and commit it in the development stage, so after cloning the repo in production you will have it ready to be used, no need to build anything.</p>
+
+<h3>A number of scripts is written:</h3>
+
+<ul>
+    <li>
+
+<h4>scripts/install</h4>
+
+<p>This script will (re-)install the project, overwriting configuration files and destroying the database. This all you need to get <em>production</em> installation, as it will also run <strong>scripts/update prod</strong> for you.</p>
+
+<p>In order to turn the installation into <em>development</em> version, run <strong>scripts/update dev</strong> after that.</p>
+
+    </li><li>
+
+<h4>scripts/update dev|prod</h4>
+
+<p>This script will install <em>development</em> or <em>production</em> environment dependencies.<p>
+
+<p>In <em>development</em> mode the script will run composer to install <em>new</em> versions of backend components and write each component version in <strong>composer.lock</strong>. So in <em>production</em> mode it will read that file and install exactly these (tested by you) versions, not the newest ones.</p>
+
+<p>In <em>dev</em> mode the script will also install latest <strong>node</strong> and <strong>bower</strong> components, so you need node.js and npm on the development server.</p>
+
+    </li><li>
+
+<h4>scripts/build-front dev|prod</h4>
+
+<p>This will copy assets, concatenate and minify all your and 3rd-party JS and CSS into <strong>js/vendor[.min].js</strong>, <strong>css/vendor[.min].css</strong>, <strong>js/app[.min].js</strong> and <strong>css/app[.min].css</strong> files in either <em>production</em> or <em>development</em> versions of the public directory.</p>
+
+    </li><li>
+
+<h4>scripts/dev-server</h4>
+
+<p>This will launch PHP-builtin web-server with <strong>public.dev</strong> on port 8000. Do not use in production!</p>
+
+<p>With --watch flag this script will use Grunt to watch for changes of frontend files and rebuild <strong>public.dev</strong> for any change detected.</p>
+
+    </li><li>
+
+<h4>scripts/test-backend</h4>
+
+<p>Run unit tests for PHP code</p>
+
+    </li><li>
+
+<h4>scripts/remove-examples</h4>
+
+<p>Remove example module, Sample entity, etc, so you will get clean skeleton ready to be used.</p>
+
+    </li>
+</ul>

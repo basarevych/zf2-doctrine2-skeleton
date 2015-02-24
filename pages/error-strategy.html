@@ -54,11 +54,15 @@ throw new \Application\Exception\NotFoundException('The message');
 
 <h3>Configuration</h3>
 
+<p><strong>exception.local.php</strong>:</p>
+
 <snippet class="php">'exceptions' =&gt; [
     'display'       =&gt; true,    // Display exception details?
     'forward' =&gt; [
         'enabled'   =&gt; false,   // Forward exception via email?
-        'codes'     =&gt; [ 500 ],
+        'codes'     =&gt; [ 500 ], // 500: non-HTTP exceptions,
+                                // 403: Access Denied,
+                                // 404: Not Found, etc
         'from'      =&gt; "root@localhost",        // Use real one
         'to'        =&gt; "tester@example.com",    // Who will receive report
         'subject'   =&gt; "MyProject Exception"    // The project name
