@@ -1,6 +1,6 @@
-<h3>ZF2 & Doctrine</h3>
+<h3>ZF2 & Doctrine ORM</h3>
 
-<p>This is most widely used setup for ZF2 + Doctrine using doctrine/doctrine-orm-module.</p>
+<p>ZF2 + Doctrine ORM using doctrine/doctrine-orm-module.</p>
 
 <p>Entity manager is available as 'Doctrine\ORM\EntityManager' service.</p>
 
@@ -17,13 +17,7 @@
 
 <h4>module/Application/src/Application/Entity</h4>
 
-<p>This directory is for Doctrine entities</p>
-
-    </li><li>
-
-<h4>module/Application/src/Application/Repository</h4>
-
-<p>And this one for Doctrine repositories</p>
+<p>This directory is for Doctrine entities and repositories</p>
 
     </li><li>
 
@@ -68,11 +62,13 @@ CREATE TABLE `sample` (
 
     </li><li>
 
-<p>Set this database driver and credentials in <strong>config/autoload/local.php</strong>.</p>
+<p>Set this database driver and credentials in <strong>config/autoload/your-db-server.local.php</strong>.</p>
 
     </li><li>
 
-<p>Create the entities</p>
+<p><strong>NOTE</strong>: scripts/install does all of the above for you</p>
+
+<p>Now create the entities</p>
 
 <snippet class="php">&lt;?php
 
@@ -81,16 +77,12 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Sample entity
- * 
- * @ORM\Entity(repositoryClass="Application\Repository\Sample")
+ * @ORM\Entity(repositoryClass="Application\Entity\SampleRepository")
  * @ORM\Table(name="sample")
  */
 class Sample
 {
     /**
-     * Row ID
-     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -98,36 +90,26 @@ class Sample
     protected $id;
 
     /**
-     * String value
-     *
      * @ORM\Column(type="string", nullable=true)
      */
     protected $value_string;
 
     /**
-     * Integer value
-     *
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $value_integer;
 
     /**
-     * Float value
-     *
      * @ORM\Column(type="float", nullable=true)
      */
     protected $value_float;
 
     /**
-     * Boolean value
-     *
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $value_boolean;
 
     /**
-     * DateTime value
-     *
      * @ORM\Column(type="utcdatetime", nullable=true)
      */
     protected $value_datetime;
@@ -140,11 +122,37 @@ class Sample
 
 <p>Auto generate getters/setters for our fields</p>
 
-<snippet class="bash">&gt; php public/index.php orm:generate-entities module/Application/src
+<snippet class="bash">&gt; php public.prod/index.php orm:generate:entities module/Application/src
 &gt; rm module/Application/src/Application/Entity/*~
 </snippet>
 
 <p>This will make sure all the getters/setters are created for all the entities. See the actual file for the resulting entity.</p>
+
+    </li><li>
+
+<p>Create repositories</p>
+
+<snippet class="php">&lt;?php
+
+namespace Application\Entity;
+
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
+use Application\Entity\SampleEntity;
+
+class SampleRepository extends EntityRepository
+{
+    public function removeAll()
+    {
+        $em = $this-&gt;getEntityManager();
+
+        $query = $em-&gt;createQuery(
+            'DELETE Application\Entity\Sample s'
+        );
+        $query-&gt;getResult();
+    }
+} 
+</snippet>
 
     </li>
 </ol>
@@ -157,16 +165,18 @@ class Sample
 
 <snippet class="php">&lt;?php
 
-namespace Application\Repository;
+namespace Application\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 
-class Sample extends EntityRepository
+class SampleRepository extends EntityRepository
 {
     public function findAllCached()
     {
-        $qb = $this-&gt;_em-&gt;createQueryBuilder();
+        $em = $this-&gt;getEntityManager();
+
+        $qb = $em-&gt;createQueryBuilder();
         $qb-&gt;select('s')
            -&gt;from('Application\Entity\Sample', 's');
 

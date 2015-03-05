@@ -14,12 +14,7 @@
 ],
 </snippet>
 
-<p>Initialize your session in Application module onBootstrap:</p>
-
-<snippet class="php">$serviceManager = $e-&gt;getApplication()-&gt;getServiceManager();
-$session        = $serviceManager-&gt;get('Session');
-$session-&gt;start();
-</snippet>
+<p>Session will be initialized automatically on first getContainer() call.</p>
 
 <h3>Usage</h3>
 

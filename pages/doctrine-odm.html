@@ -1,0 +1,125 @@
+<h3>ZF2 & Doctrine Mongo ODM</h3>
+
+<p>ZF2 + Doctrine Mongo ODM using doctrine/doctrine-mongo-odm-module.</p>
+
+<p>Document manager is available as 'doctrine.documentmanager.odm_default' service.</p>
+
+<h3>Directories</h3>
+
+<ul>
+    <li>
+
+<h4>module/Application/src/Application/Document</h4>
+
+<p>This directory is for Doctrine documents and repositories</p>
+
+    </li><li>
+
+<h4>module/Application/src/Application/Doctrine</h4>
+
+<p>Our extensions to Doctrine directory</p>
+
+    </li>
+</ul>
+
+<p>Initial skeleton includes Sample document and a repository for it. Delete it when you create your schema and entities.</p>
+
+<h3>Getting Started</h3>
+
+<ol>
+    <li>
+
+<p>Create the actual database on server: See README in <strong>database/</strong> directory for DB server-specific console commands.</p>
+
+    </li><li>
+
+<p>Set this database driver and credentials in <strong>config/autoload/mongodb.local.php</strong>.</p>
+
+    </li><li>
+
+<p><strong>NOTE</strong>: scripts/install does all of the above for you</p>
+
+<p>Now create the documents</p>
+
+<snippet class="php">&lt;?php
+
+namespace Application\Document;
+
+use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+
+/**
+ * @ODM\Document(repositoryClass="Application\Document\SampleRepository")
+ */
+class Sample 
+{
+    /**
+     * @ODM\Id
+     */
+    protected $id;
+
+    /**
+     * @ODM\String
+     */
+    protected $value_string;
+
+    /**
+     * @ODM\Int
+     */
+    protected $value_integer;
+
+    /**
+     * @ODM\Float
+     */
+    protected $value_float;
+
+    /**
+     * @ODM\Boolean
+     */
+    protected $value_boolean;
+
+    /**
+     * @ODM\Date
+     */
+    protected $value_datetime;
+}
+</snippet>
+
+<p>As you can see we created all the document fields as protected properties</p>
+
+    </li><li>
+
+<p>Auto generate getters/setters for our fields</p>
+
+<snippet class="bash">&gt; php public.prod/index.php odm:generate:documents module/Application/src
+&gt; rm module/Application/src/Application/Document/*~
+</snippet>
+
+<p>This will make sure all the getters/setters are created for all the documents. See the actual file for the resulting document.</p>
+
+    </li><li>
+
+<p>Create repositories</p>
+
+<snippet class="php">&lt;?php
+
+namespace Application\Document;
+
+use Doctrine\ODM\MongoDB\DocumentRepository;
+use Application\Document\Sample as SampleDocument;
+
+class SampleRepository extends DocumentRepository
+{
+    public function removeAll()
+    {
+        $dm = $this-&gt;getDocumentManager();
+
+        $dm-&gt;createQueryBuilder('Application\Document\Sample')
+            -&gt;remove()
+            -&gt;getQuery()
+            -&gt;execute();
+    }
+}
+</snippet>
+
+    </li>
+</ol>
